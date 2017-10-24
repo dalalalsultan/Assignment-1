@@ -1,0 +1,44 @@
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  
+  titlePanel("Shiny App 2"),
+
+  sidebarLayout(
+    sidebarPanel(
+      fileInput("file1", "Choose CSV File",accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
+      tags$hr(),
+      selectInput("var", "Variable:", c("Age"="age", "Height"="height", "Weight"="weight", "BMI"="bmi")),
+      radioButtons("rb", "Choose a colour:",c("Pink" = "pink","Navy" = "navy","Purple" = "purple","Yellow" = "yellow"))
+    ),
+    
+    mainPanel(
+      tableOutput("contents"),
+      plotOutput("variables")
+    )
+  )
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+  output$contents <- renderTable({
+    infile <- input$file1
+    if (is.null(infile))
+      return(NULL)
+    c<- read.csv(infile$datapath, header = input$header)
+  })
+    
+    
+  output$variables<- renderPlot({
+    (req(input$file1))
+    infile<- input$file1
+    data<- read.csv(infile$datapath, header=input$header)
+    var<- input$var
+    col<- input$rb
+    boxplot(data[,var], col=col, main=paste("Variable:",var))
+  })}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
