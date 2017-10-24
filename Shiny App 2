@@ -9,6 +9,7 @@ ui <- fluidPage(
     sidebarPanel(
       fileInput("file1", "Choose CSV File",accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
       tags$hr(),
+      checkboxInput("header", "Header", TRUE),
       selectInput("var", "Variable:", c("Age"="age", "Height"="height", "Weight"="weight", "BMI"="bmi")),
       radioButtons("rb", "Choose a colour:",c("Pink" = "pink","Navy" = "navy","Purple" = "purple","Yellow" = "yellow"))
     ),
